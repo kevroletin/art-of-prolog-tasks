@@ -4,5 +4,6 @@
 extra/
 *.dvi
 *.pdf
+!pdf/*.pdf
 *.tex
 *.log

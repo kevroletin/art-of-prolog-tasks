@@ -1,0 +1,63 @@
+#+TITLE:        Логическое программирование
+#+AUTHOR:       Кевролетин В.В. группа с8403а(246)
+#+EMAIL:        kevroletin@gmial.com
+#+LANGUAGE:     russian
+#+LATEX_HEADER: \usepackage[cm]{fullpage}
+
+* Задание 2
+** Условие
+   =(2.3.1i)= Написать программу для отношения =above=, используя =on=.
+** Решение
+
+*** Исходный код
+
+#+begin_src prolog
+above(Block1, Block2) :- on(Block1, Block2).
+above(Block1, Block2) :- on(Block1, X), above(X, Block2).
+#+end_src
+
+*** Тесты
+
+**** Входные данные
+#+begin_src prolog
+on(block2, block1).
+on(block3, block2).
+on(block4, block3).
+on(block5, block4).
+#+end_src
+
+**** Запросы
+#+begin_src prolog
+| ?- above(X, Y). a
+above(X, Y). a
+
+X = block2
+Y = block1 ? 
+
+X = block3
+Y = block2
+
+X = block4
+Y = block3
+
+X = block5
+Y = block4
+
+X = block3
+Y = block1
+
+X = block4
+Y = block2
+
+X = block4
+Y = block1
+
+X = block5
+Y = block3
+
+X = block5
+Y = block2
+
+X = block5
+Y = block1
+#+end_src

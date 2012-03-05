@@ -1,0 +1,104 @@
+#+TITLE:        Логическое программирование
+#+AUTHOR:       Кевролетин В.В. группа с8403а(246)
+#+EMAIL:        kevroletin@gmial.com
+#+LANGUAGE:     russian
+#+LATEX_HEADER: \usepackage[cm]{fullpage}
+
+* Задание 1
+** Условие
+   =(2.2.1ii) schedule_conflict(Time,Place, Course1,Course2)=
+
+** Решение
+
+Можно выделить несколько видов конфликтов в расписании:
+- Одному и тому же преподавателю назначены занятия в разных местах
+- Разным преподавателям назначены занятия в одно и то же время в одном
+  и том же месте
+
+*** Исходный код
+  
+#+begin_src prolog
+
+=(A, B, C) :- =(A, B), =(B, C).
+
+between(A, B, C) :- =<(B, A), =<(A, C).
+
+time_inside_intervals(time(GivenDay, GivenTime),
+                      time(Day1, Start1, Fin1),
+                      time(Day2, Start2, Fin2)) :-
+        =(Day1, Day2, GivenDay),
+        between(GivenTime, Start1, Fin1),
+        between(GivenTime, Start2, Fin2).
+
+schedule_conflict(time(GivenDay, GivenTime), _, Course1, Course2) :-
+        course(Course1, Time1, Lecturer1, _),
+        course(Course2, Time2, Lecturer2, _),
+        time_inside_intervals(time(GivenDay, GivenTime), Time1, Time2),
+        =(Lecturer1, Lecturer2),
+        \=(Course1, Course2).
+
+schedule_conflict(time(GivenDay, GivenTime), GivenLocation, Course1, Course2) :-
+        course(Course1, Time1, _, Location1),
+        course(Course2, Time2, _, Location2),
+        time_inside_intervals(time(GivenDay, GivenTime), Time1, Time2),
+        =(Location1, Location2, GivenLocation),
+        \=(Course1, Course2).
+
+#+end_src
+
+*** Тесты
+
+Входные данные:
+#+begin_src prolog
+course(complexity, time(monday,9, 11),lecturer(david,harel),     location(feinberg,a)).
+course(phisics,    time(monday,9, 12),lecturer(david,harel),     location(feinberg,b)).
+course(math,       time(monday,9, 11),lecturer(another,lecturer),location(feinberg,a)).
+course(english,    time(monday,14,15),lecturer(maria,ivanovna),  location(feinberg,a)).
+course(germany,    time(monday,14,15),lecturer(victor,petrovich),location(feinberg,a)).
+#+end_src
+
+ 1. complexity и phisics - эти 2 курса ведёт в одно и то же время один
+    и тот же преподователь
+ 2. complexity и math - эти 2 курса в одно и то же время ведутся в
+    одном классе
+ 3. english и germany - так же в одно и то же время ведутся в одном
+    классе
+
+Данный запрос выявляет первые 2 конфликта, перечисленных выше:
+#+begin_src prolog
+
+| ?- schedule_conflict(time(monday, 10), C, D, E). a
+schedule_conflict(time(monday, 10), C, D, E). a
+
+D = complexity
+E = phisics ? 
+
+D = phisics
+E = complexity
+
+C = location(feinberg,a)
+D = complexity
+E = math
+
+C = location(feinberg,a)
+D = math
+E = complexity
+
+#+end_src
+
+Следующий запрос выявляет 3й конфликт:
+#+begin_src prolog
+
+| ?- schedule_conflict(time(monday, 14), C, D, E). a
+schedule_conflict(time(monday, 14), C, D, E). a
+
+C = location(feinberg,a)
+D = english
+E = germany ? 
+
+C = location(feinberg,a)
+D = germany
+E = english
+
+#+end_src
+
