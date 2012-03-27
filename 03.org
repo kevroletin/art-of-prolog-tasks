@@ -1,0 +1,122 @@
+#+TITLE:        Логическое программирование
+#+AUTHOR:       Кевролетин В.В. группа с8403а(246)
+#+EMAIL:        kevroletin@gmial.com
+#+LANGUAGE:     russian
+#+LATEX_HEADER: \usepackage[cm]{fullpage}
+
+* Задание 
+** Условие
+(3.1.1i,iv,v) >, even, odd, fib(N,F) для представления натурального
+числа n в виде s^n(0). 
+
+** Решение
+
+Для начала определим предикат, указывающий на то, является ли
+переменная натуральным числом. Это поможет нам задавать ограничения на
+переменные, что в свою очередь необходимо для написания корректной
+программы (чтобы можно было складывать только натуральные числа и
+ничего больше)
+
+#+begin_src prolog
+natural_number(0).
+natural_number(s(X)) :- natural_number(X).
+#+end_src
+
+*** Отношение больше
+
+Отношение *больше* реализуется следующим образом:
+1. Любое натуральное чило, меньше минимального натурального числа, при
+   условии, что само не является таковым:
+#+begin_src prolog
+gt(X, 0) :-
+        \=(X, 0),
+        natural_number(X).
+#+end_src
+2. Сравнивая 2 числа A и B, если существуют A-1 и B-1, то мы можем
+   сравнить их. Если же B = 0, то имеем предудущий случай. Если A = 0, то
+   получаем утверждение невыводимое из фактов имеющихся в программе, что
+   нас и устраивает.
+#+begin_src prolog
+gt(s(X), s(Y)) :-
+        natural_number(X),
+        natural_number(Y),
+        gt(X, Y).
+#+end_src
+
+Тесты
+#+begin_src prolog
+| ?- gt(0, 0).
+no
+| ?- gt(0, s(0)).
+no
+| ?- gt(s(0), 0).
+true
+| ?- gt(s(0), s(0)).
+no
+| ?- gt(s(s(0)), s(0)).
+true
+#+end_src
+
+** Определения четности числа
+#+begin_src prolog      
+odd(0).
+even(s(X)) :-
+        natural_number(X),
+        \+ odd(X).
+        
+odd(s(X)) :-
+        natural_number(X),
+        \+ even(X).
+#+end_src
+
+Тесты
+#+begin_src prolog
+| ?- odd(0).
+yes
+| ?- odd(s(0)).
+no
+| ?- odd(s(s(0))).
+no
+| ?- even(s(s(0))).
+yes
+#+end_src
+
+*** Числа Фибоначи
+Сперва реализуем сложение
+#+begin_src prolog
+plus(0, X, X) :-
+        natural_number(X).
+plus(s(X),Y,s(Z)) :-
+        plus(X, Y, Z).
+#+end_src
+Затем зададим первые 2 числа Фибоначи:
+#+begin_src prolog
+fib(s(0), s(0)).
+fib(s(s(0)), s(0)).
+#+end_src
+И правило, которое определяет очередное число Фибоначи,  используя 2
+предудущих.
+#+begin_src prolog
+fib(s(s(N)), F) :-
+        fib(N, Fnn),
+        fib(s(N), Fn),
+        plus(Fnn, Fn, F).
+#+end_src
+
+Тесты
+Проверим:
+F_{7} = 21
+F_{8} = 34
+#+begin_src prolog
+| ?- fib(s(s(s(s(s(s(s(s(0)))))))), X).
+fib(s(s(s(s(s(s(s(s(0)))))))), X).
+
+X = s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(0))))))))))))))))))))) ?
+
+| ?- fib(s(s(s(s(s(s(s(s(s(0))))))))), X).
+fib(s(s(s(s(s(s(s(s(s(0))))))))), X).
+
+X = s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(0)))))))))))))))))))))))))))))))))) ? 
+#+end_src
+
+     
