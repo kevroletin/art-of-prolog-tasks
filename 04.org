@@ -1,0 +1,62 @@
+#+TITLE:        Логическое программирование
+#+AUTHOR:       Кевролетин В.В. группа с8403а(246)
+#+EMAIL:        kevroletin@gmial.com
+#+LANGUAGE:     russian
+#+LATEX_HEADER: \usepackage[cm]{fullpage}
+
+* Задание4
+** Условие
+adjacent/3 и last/2 с использованием append.
+** Решение
+   
+*** Исходный код
+
+#+begin_src prolog
+adjacent(List, A, B) :-
+        list(List),
+        append( _ , [A | [ B | _ ] ], List).        
+#+end_src
+
+*** Тесты
+
+#+begin_src
+| ?- adjacent([a, b, c, d, e], X, Y). a
+adjacent([a, b, c, d, e], X, Y). a
+
+X = a
+Y = b ? 
+
+X = b
+Y = c
+
+X = c
+Y = d
+
+X = d
+Y = e
+
+no
+#+end_src
+
+** Решение
+    
+#+begin_src prolog
+last_(List, X) :-
+        list(List),
+        append(_, [X], List).
+#+end_src
+
+*** Тесты
+#+begin_src prolog
+| ?- last_([a, b, c], X).
+last_([a, b, c], X).
+
+X = c
+
+yes
+| ?- last_([], X).
+last_([], X).
+
+no
+#+end_src
+

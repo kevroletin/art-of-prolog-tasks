@@ -1,0 +1,33 @@
+#+TITLE:        Логическое программирование
+#+AUTHOR:       Кевролетин В.В. группа с8403а(246)
+#+EMAIL:        kevroletin@gmial.com
+#+LANGUAGE:     russian
+#+LATEX_HEADER: \usepackage[cm]{fullpage}
+
+* Задание 
+** Условие
+(3.3i) Написать программу для отношения substitute/3. 
+** Решение
+
+*** Исходный код
+
+#+begin_src prolog
+substitute(_, _, [], []).
+substitute(X, Y, [Z | Xs], [Z | Ys]) :-
+        list(Xs),
+        \=(X, Z),
+        substitute(X, Y, Xs, Ys).
+       
+substitute(X, Y, [X | Xs], [Y | Ys]) :-
+        list(Xs),
+        substitute(X, Y, Xs, Ys).
+#+end_src
+
+*** Тесты
+
+#+begin_src prolog
+| ?- substitute(a, b, [a, b, c, d, a], X). a
+substitute(a, b, [a, b, c, d, a], X). a
+
+X = [b,b,c,d,b] ? 
+#+end_src

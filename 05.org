@@ -5,20 +5,30 @@
 #+LATEX_HEADER: \usepackage[cm]{fullpage}
 
 * Задание 
+
 ** Условие
+   double/2
+
 ** Решение
 
 *** Исходный код
 
 #+begin_src prolog
+double(X, Y) :- append(X, X, Y).
 #+end_src
-
+    
 *** Тесты
-
-**** Входные данные
 #+begin_src prolog
-#+end_src
+| ?- double([a, b, c], X).
+double([a, b, c], X).
 
-**** Запросы
-#+begin_src prolog
+X = [a,b,c,a,b,c]
+
+yes
+| ?- double([], X).
+double([], X).
+
+X = []
+
+yes
 #+end_src

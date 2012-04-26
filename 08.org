@@ -1,0 +1,55 @@
+#+TITLE:        Логическое программирование
+#+AUTHOR:       Кевролетин В.В. группа с8403а(246)
+#+EMAIL:        kevroletin@gmial.com
+#+LANGUAGE:     russian
+#+LATEX_HEADER: \usepackage[cm]{fullpage}
+
+* Задание 
+** Условие
+   (3.3iii) Написать программу для отношения no_doubles/2.
+** Решение
+
+*** Исходный код
+
+#+begin_src prolog
+member_([], _) :- false.
+member_([X | _ ], X).
+member_([_ | Xs], Y) :-
+        list(Xs),
+        member_(Xs, Y).
+
+not_member([], _).
+not_member([X | _ ], X) :- false.
+not_member([X | Xs], Y) :-
+        list(Xs),
+        \=(X, Y),
+        not_member(Xs, Y).
+#+end_src
+    
+#+begin_src prolog
+no_doubles([], []).
+no_doubles([X | Xs], [X | Ys]) :-
+        list(Xs),
+        not_member(Xs, X),
+        no_doubles(Xs, Ys).
+no_doubles([X | Xs], Ys) :-
+        list(Xs),
+        member_(Xs, X),
+        no_doubles(Xs, Ys).
+#+end_src
+
+*** Тесты
+
+#+begin_src prolog
+| ?- no_doubles([a, a, a, b, b, c, b, d, e, e, a], X).
+no_doubles([a, a, a, b, b, c, b, d, e, e, a], X).
+
+X = [c,b,d,e,a] ? 
+
+
+yes
+| ?- no_doubles([], X).
+no_doubles([], X).
+
+X = []
+#+end_src
