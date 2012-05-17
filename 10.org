@@ -1,0 +1,45 @@
+#+TITLE:        Логическое программирование
+#+AUTHOR:       Кевролетин В.В. группа с8403а(246)
+#+EMAIL:        kevroletin@gmial.com
+#+LANGUAGE:     russian
+#+LATEX_HEADER: \usepackage[cm]{fullpage}
+
+* Задание 10
+** Условие
+
+Give the Herbrand universe and Herbrand base of the following definite program:
+p(f(X)) \leftarrow q(X, g(X)).
+q(a,g(b)).
+q(b,g(b)). 
+
+** Решение
+
+Из 2х атомов a, b и 2х функций f, g получаем:
+   
+Herbrand universe: 
+
+a, b, f(a), f(b), g(a), g(b), g(f(a)), g(f(b)), g(g(a)), g(g(b)),
+f(f(a)), f(f(b)), f(g(a)), f(g(b)), ...
+
+Применяя предикаты p, q к термам, перечисленным выше получаем:
+
+Herbrand base: 
+
+p(a),
+p(b),
+p(f(a)),
+p(f(b)),
+p(g(a)),
+ ... ,
+
+q(a, a),
+q(a, b),
+q(b, a),
+q(a, f(a)),
+q(b, b),
+q(f(a), a),
+q(a, f(b)),
+q(b, f(a)),
+q(f(a), b),
+q(f(b), a),
+...
