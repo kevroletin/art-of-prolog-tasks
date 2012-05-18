@@ -1,0 +1,35 @@
+#+TITLE:        Логическое программирование
+#+AUTHOR:       Кевролетин В.В. группа с8403а(246)
+#+EMAIL:        kevroletin@gmial.com
+#+LANGUAGE:     russian
+#+LATEX_HEADER: \usepackage[cm]{fullpage}
+
+* Задание 17
+** Условие
+   
+Отношение range/3, которое строит список с конца. 
+
+** Решение
+
+*** Исходный код
+
+#+begin_src prolog
+range(M, N, [N | Ns]) :-
+     M < N,
+     (N1 is N - 1),
+     range(M, N1, Ns).
+
+range(N, N, [N]).
+#+end_src
+
+*** Тесты
+
+#+begin_src prolog
+range(10, 20, X).
+
+X = [20,19,18,17,16,15,14,13,12,11,10] ? 
+
+
+yes
+| ?- 
+#+end_src

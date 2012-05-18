@@ -1,0 +1,76 @@
+#+TITLE:        Логическое программирование
+#+AUTHOR:       Кевролетин В.В. группа с8403а(246)
+#+EMAIL:        kevroletin@gmial.com
+#+LANGUAGE:     russian
+#+LATEX_HEADER: \usepackage[cm]{fullpage}
+
+* Задание 15
+** Условие
+
+Отношение between/3, который генерирует числа в обратном порядке,
+скалярное произведение элементов двух списков. 
+   
+** between
+
+*** Исходный код
+
+Т.к. порядок правил в программе влияет на то, в каком порядке Пролог
+будет их применять во время вывода, достаточно поменять 2 правила
+местами:
+
+#+begin_src prolog
+between(I, J, K) :-
+        I < J,
+        (I1 is I + 1),
+        between(I1, J, K).
+
+between(I, _, I).
+#+end_src
+
+*** Тесты
+
+#+begin_src prolog
+between(10, 15, X). a
+
+X = 15 ? 
+
+X = 14
+
+X = 13
+
+X = 12
+
+X = 11
+
+X = 10
+
+yes
+#+end_src
+
+** scalar_mult
+
+*** Исходный код
+
+#+begin_src prolog
+scalar_mult(List1, List2, Res) :-
+        scalar_mult(List1, List2, Res, 0).
+
+scalar_mult([], [], Res, Res).
+
+scalar_mult([X | Xs], [Y | Ys], Result, CurrRes) :-
+        (NewCurrRes is X * Y + CurrRes),
+        scalar_mult(Xs, Ys, Result, NewCurrRes).
+#+end_src
+
+*** Тесты
+
+#+begin_src prolog
+
+| ?- scalar_mult([1, 2, 3], [4, 5, 6], X).
+scalar_mult([1, 2, 3], [4, 5, 6], X).
+
+X = 32 ? 
+
+
+yes
+#+end_src

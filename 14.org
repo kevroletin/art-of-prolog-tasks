@@ -4,21 +4,45 @@
 #+LANGUAGE:     russian
 #+LATEX_HEADER: \usepackage[cm]{fullpage}
 
-* Задание 
+* Задание 14
 ** Условие
+
+Отношение minlist/2   
+   
 ** Решение
 
+Введём вспомогательный предикат minlist/3, который принимает
+дополнительный параметр CurrMin - минимальный элемент из уже
+просмотренных элементов списка.
+   
 *** Исходный код
 
 #+begin_src prolog
+
+minlist([X | Xs], Y) :- minlist(Xs, X, Y).
+
+minlist([], CurrMin, CurrMin).
+
+minlist([X | Xs], CurrMin, Result) :-
+        X < CurrMin,
+        minlist(Xs, X, Result).
+
+minlist([X | Xs], CurrMin, Result) :-
+        X >= CurrMin,
+        minlist(Xs, CurrMin, Result).
+
 #+end_src
 
 *** Тесты
 
-**** Входные данные
 #+begin_src prolog
-#+end_src
 
-**** Запросы
-#+begin_src prolog
+minlist([2, 3, 1, 10, 15, 6, 2], X).
+
+X = 1
+
+minlist([1], X).
+
+X = 1
+
 #+end_src

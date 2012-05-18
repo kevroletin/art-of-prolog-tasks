@@ -1,0 +1,130 @@
+#+TITLE:        Логическое программирование
+#+AUTHOR:       Кевролетин В.В. группа с8403а(246)
+#+EMAIL:        kevroletin@gmial.com
+#+LANGUAGE:     russian
+#+LATEX_HEADER: \usepackage[cm]{fullpage}
+
+* Задание 21
+** Условие
+
+Отношение plus/3 для многовариантного использования. 
+   
+** Решение
+
+*** Исходный код
+
+Случаи с одной переменной:
+    
+#+begin_src prolog
+plus(X, Y, Z) :-
+        nonvar(X), nonvar(Y), Z is X + Y.
+
+plus(X, Y, Z) :-
+        nonvar(X), nonvar(Z), Y is Z - X.
+
+plus(X, Y, Z) :-
+        nonvar(Y), nonvar(Z), X is Z - Y.
+#+end_src
+
+Для случаев с 2мя перемеными введены вспомогательные предикаты:
+inc_dec - последовательно уменьшает первый и увеличивает второй
+аргемунты, пока 2й не становится равен 0.
+И inc_inc до бесконечности увеличивающий оба аргумента.
+        
+#+begin_src prolog
+plus(X, Y, Z) :-
+        nonvar(Z),
+        inc_dec(Z, X, Y).
+
+plus(X, Y, Z) :-
+        nonvar(Y),
+        inc_inc(Y, X, Z).
+
+plus(X, Y, Z) :-
+        nonvar(X),
+        inc_inc(X, Y, Z).
+
+inc_dec(X, Y, Z) :-
+        inc_dec(0, X, Y, Z).
+
+inc_dec(Y, Z, Y, Z) :-
+        Z >= 0.
+
+inc_dec(Y, Z, RY, RZ) :-
+        Z > 0,
+        Y1 is Y + 1,
+        Z1 is Z - 1,
+        inc_dec(Y1, Z1, RY, RZ).
+
+inc_inc(X, Y, Z) :-
+        inc_inc(0, X, Y, Z).
+
+inc_inc(Y, Z, Y, Z).
+
+inc_inc(Y, Z, RY, RZ) :-
+        Z > 0,
+        Y1 is Y + 1,
+        Z1 is Z + 1,
+        inc_inc(Y1, Z1, RY, RZ).
+#+end_src
+        
+*** Тесты
+
+#+begin_src prolog
+plus(X, 10, 20).
+X = 10 
+
+?- plus(10, X, 20).
+X = 10 
+
+?- plus(10, 10, X).
+X = 20 
+
+?- plus(X, Y, 3).
+X = 0,
+Y = 3 
+X = 1,
+Y = 2 
+X = 2,
+Y = 1 
+X = 3,
+Y = 0 
+
+?- plus(X, 3, Y).
+X = 0,
+Y = 3 
+X = 1,
+Y = 4 
+X = 2,
+Y = 5 
+X = 3,
+Y = 6 
+X = 4,
+Y = 7 
+X = 5,
+Y = 8 
+X = 6,
+Y = 9 
+
+...
+
+?- plus(3, Y, Z).
+Y = 0,
+Z = 3 
+Y = 1,
+Z = 4 
+Y = 2,
+Z = 5 
+Y = 3,
+Z = 6 
+Y = 4,
+Z = 7 
+Y = 5,
+Z = 8 
+Y = 6,
+Z = 9 
+Y = 7,
+Z = 10
+
+...
+#+end_src

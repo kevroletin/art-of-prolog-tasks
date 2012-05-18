@@ -1,0 +1,24 @@
+#+TITLE:        Логическое программирование
+#+AUTHOR:       Кевролетин В.В. группа с8403а(246)
+#+EMAIL:        kevroletin@gmial.com
+#+LANGUAGE:     russian
+#+LATEX_HEADER: \usepackage[cm]{fullpage}
+
+* Задание 10
+** Условие
+** Решение
+
+*** Исходный код
+
+#+begin_src prolog
+#+end_src
+
+*** Тесты
+
+**** Входные данные
+#+begin_src prolog
+#+end_src
+
+**** Запросы
+#+begin_src prolog
+#+end_src

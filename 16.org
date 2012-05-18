@@ -1,0 +1,46 @@
+#+TITLE:        Логическое программирование
+#+AUTHOR:       Кевролетин В.В. группа с8403а(246)
+#+EMAIL:        kevroletin@gmial.com
+#+LANGUAGE:     russian
+#+LATEX_HEADER: \usepackage[cm]{fullpage}
+
+* Задание 16
+** Условие
+
+Отношение length/2 для поиска длины списка в итеративном стиле. 
+   
+** Решение
+
+*** Исходный код
+
+Введем вспомагательный предикат length/3, имеющий дополнительный
+параметр CurrLen - длина уже просмотренного списка.
+
+#+begin_src prolog
+length_(List, Length) :-
+        length_(List, Length, 0).
+
+length_([], Length, Length).
+
+length_([_ | Xs], Length, CurrLen) :-
+        (NextLen is CurrLen + 1),
+        length_(Xs, Length, NextLen).
+#+end_src
+
+*** Тесты
+
+#+begin_src prolog
+| ?- length([], X).
+length([], X).
+
+X = 0
+
+yes
+| ?- length([1, 2, 3, 4, 5], X).
+length([1, 2, 3, 4, 5], X).
+
+X = 5
+
+yes
+| ?-     
+#+end_src

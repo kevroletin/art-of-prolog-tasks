@@ -1,0 +1,27 @@
+#+TITLE:        Логическое программирование
+#+AUTHOR:       Кевролетин В.В. группа с8403а(246)
+#+EMAIL:        kevroletin@gmial.com
+#+LANGUAGE:     russian
+#+LATEX_HEADER: \usepackage[cm]{fullpage}
+
+* Задание 11
+** Условие
+
+Пусть T_P^0=\emptyset, T_P^{i+1}=T_P(T_P^i). Показать, что p(s^n(0))\in T_P^m iff n \leq m. 
+
+** Решение
+
+*** Исходный код
+
+#+begin_src prolog
+#+end_src
+
+*** Тесты
+
+**** Входные данные
+#+begin_src prolog
+#+end_src
+
+**** Запросы
+#+begin_src prolog
+#+end_src
