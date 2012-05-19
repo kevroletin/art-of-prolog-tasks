@@ -36,12 +36,14 @@ substitute(Old, New, Term, Term1) :-
         substitute_each(Old, New, Args, NewArgs),
         Term1 =.. [F | NewArgs].
 
-substitute_each(Old, New, [Old | Xs], [New | Ys]) :-
+substitute_each(Old, New, [X | Xs], [Y | Ys]) :-
+        substitute(Old, New, X, Y),
         substitute_each(Old, New, Xs, Ys).
 
+/*
 substitute_each(Old, New, [ X | Xs], [X | Ys]) :-
         substitute_each(Old, New, Xs, Ys).
-
+*/
 substitute_each(_, _, [], []).
         
 

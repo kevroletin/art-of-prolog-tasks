@@ -1,10 +1,10 @@
 
-between(I, J, K) :-
+between_(I, J, K) :-
         I < J,
         (I1 is I + 1),
         between(I1, J, K).
 
-between(I, _, I).
+between_(I, _, I).
 
 /*
 between(10, 15, X). a

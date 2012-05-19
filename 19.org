@@ -15,11 +15,36 @@
 что значение в нём больше любого значения в узглах из левого поддерева
 и больше либо равно любому значению из правого поддерева.
 
-Предикат is_ordered_tree/1 проверяет, является ли дерево
-упорядоченным, успользуя предикат check_ordering/3. check_ordering/3 
+Предикат is\_ordered\_tree/1 проверяет, является ли дерево
+упорядоченным, успользуя предикат check\_ordering/3. check\_ordering/3 
 проверяет, выполняется ли условие упорядоченности для текущего узла
 и его правого и левого поддерева.
    
+- is\_ordered\_tree(X) :: истина, если X - упорядоченное бинарное дерево
+  - X :: узел дерева, допустимые значения - элемент типа node, либо
+         null
+
+Вспомогательные предикаты:
+         
+- is\_data(X) :: истина, если аргумет - число
+  - X :: число
+
+- check\_ordering(Data, Left, Right) :: истина, если ужел с данными
+     Data, ветками Left и Right удволетворяет условию упорядоченности
+  - Data :: число
+  - Left :: узел дерева
+  - Right :: узел дерева
+
+- check\_less\_eq\_or\_null(Data1, Data2) :: проверка на =< с учетом того,
+     что вторым аргументом может быть null
+  - Data1 :: число или null
+  - Data2 :: число или null
+
+- check\_greater\_or\_null(Data1, Data2) :: проверка на > с учетом того,
+     что вторым аргументом может быть null
+  - Data1 :: число или null
+  - Data2 :: число или null
+
 *** Исходный код
 
 #+begin_src prolog
@@ -27,9 +52,6 @@ is_data(X) :-
         number(X).
 
 get_data(node(Data, _, _), Data) :-
-        is_data(Data).
-
-is_ordered_tree(leaf(Data)) :-
         is_data(Data).
 
 is_ordered_tree(node(Data, Left, Right)) :-
@@ -56,8 +78,6 @@ check_greater_or_null(Data, null) :-
 check_greater_or_null(Data, node(DataNode, _, _)) :-
         is_data(Data),
         >(Data, DataNode).        
-
-
     
 #+end_src
 
@@ -66,6 +86,7 @@ check_greater_or_null(Data, node(DataNode, _, _)) :-
 Для написания тестов использовалось расширение языка Prolog в
 реализации SWI-Prolog.
     
+**** is\_ordered\_tree(+)
 #+begin_src prolog
 :- begin_tests(is_ordered_tree).
 

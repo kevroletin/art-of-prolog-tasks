@@ -13,8 +13,20 @@
 
 *** Исходный код
 
+- length\_(List, Length) :: истина, если Length - число элементов в
+     списке List
+  - List :: список
+  - Length :: число
+    
 Введем вспомагательный предикат length/3, имеющий дополнительный
 параметр CurrLen - длина уже просмотренного списка.
+
+- length\_(List, Length, CurrLen) :: истина, если сумма числа
+     элементов в списке List и числа CurrLen
+     списке List
+  - List :: список
+  - Length :: число
+  - CurrLen :: число
 
 #+begin_src prolog
 length_(List, Length) :-
@@ -29,18 +41,28 @@ length_([_ | Xs], Length, CurrLen) :-
 
 *** Тесты
 
+**** length\_(+, +)
 #+begin_src prolog
-| ?- length([], X).
-length([], X).
+
+?- length_([1, 2, 3, 4], 4).
+
+true.
+
+?- length_([], 0).
+
+true.
+
+#+end_src
+    
+    
+**** length\_(+, -)
+#+begin_src prolog
+length_([], X).
 
 X = 0
 
-yes
-| ?- length([1, 2, 3, 4, 5], X).
-length([1, 2, 3, 4, 5], X).
+length_([1, 2, 3, 4, 5], X).
 
 X = 5
 
-yes
-| ?-     
 #+end_src

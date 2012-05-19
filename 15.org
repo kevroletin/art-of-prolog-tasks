@@ -12,6 +12,11 @@
    
 ** between
 
+- between(I, J, K) :: истина, если X - число в диапазоне [I, J]
+  + I :: число
+  + J :: число
+  + K :: число
+   
 *** Исходный код
 
 Т.к. порядок правил в программе влияет на то, в каком порядке Пролог
@@ -29,10 +34,34 @@ between(I, _, I).
 
 *** Тесты
 
+**** between(+, +, +)
 #+begin_src prolog
-between(10, 15, X). a
 
-X = 15 ? 
+between(10, 10, 10).
+
+true.
+
+between(10, 20, 30).
+
+false.
+
+
+between(10, 30, 20).
+true 
+
+#+end_src
+
+**** between(+, +, -)
+
+#+begin_src prolog
+
+between(10, 10, X).
+
+X = 10.
+     
+between(10, 15, X).
+
+X = 15
 
 X = 14
 
@@ -44,12 +73,17 @@ X = 11
 
 X = 10
 
-yes
 #+end_src
 
-** scalar_mult
+** scalar\_mult
 
 *** Исходный код
+
+- scalar\_mult(List1, List2, Res) :: истана, если Res - сказалярное
+     произведение векторов List1 и List2
+  + List1 :: список, элементы которого - числа
+  + List2 :: список, элементы которого - числа    
+  + Res :: число
 
 #+begin_src prolog
 scalar_mult(List1, List2, Res) :-
@@ -64,13 +98,32 @@ scalar_mult([X | Xs], [Y | Ys], Result, CurrRes) :-
 
 *** Тесты
 
+**** scalar\_mult(+, +, +)
 #+begin_src prolog
 
-| ?- scalar_mult([1, 2, 3], [4, 5, 6], X).
+?- scalar_mult([1, 1, 1], [2, 2, 2], 6).
+
+true.
+
+?- scalar_mult([1, 1, 1], [4, 4, 4], 12).
+
+true.
+
+#+end_src
+
+**** scalar\_mult(+, +, -)
+#+begin_src prolog
+
 scalar_mult([1, 2, 3], [4, 5, 6], X).
 
-X = 32 ? 
+X = 32.
 
+?- scalar_mult([1, 1, 1], [4, 4, 4], X).
 
-yes
+X = 12.
+
+?- scalar_mult([1, 2, 3, 4, 5, 6, 7], [1, 2, 3, 4, 5 , 6, 7], X).
+
+X = 140.
+
 #+end_src

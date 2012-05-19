@@ -15,72 +15,126 @@
 
 Если 2 терма равны, то число вхождений равно 1. Если терм, в котором
 происходит поиск составной, то следует рекурсивно пременить поиск
-для всех его аргументовв. В реализации введены 2 вспомогательных терма
-ocurences/4 - накапливает текущий результат в аргументе CurrnN и
-вызывает проверку для каждого аргумента составного терма. ocurences/5
-итеративно применяет проверку для каждого аргумента.
-    
+для всех его аргументов. В реализации введены 2 вспомогательных терма:
+compare\_terms сравнивает 2 терма на равенство и возвращает 0 или 1.
+compare\_arguments\5 итеративно применяет проверку для каждого
+аргумента составного терма.
+
+- ocurences(Sub, Term, N) :: истина, если N - число вхождений терма
+     Sub в терм Term
+  - Sub :: произвольный тип
+  - Term :: произвольный тип
+  - N :: число
+
+- compare\_terms(Term1, Term2, X) :: истина, если 2 терма равны и X =
+     1, либо не равны и X = 0
+  - Term1 :: произвольный тип
+  - Term2 :: произвольный тип
+  - X :: число
+
+- compare\_arguments(Sub, Term, ArgNum, CurrN, N) :: истина, если N -
+     сумма числа вхождений терма Sub в первые ArgNum аргнументов терма
+     Term и числа CurrN
+  - Sub :: произвольный тип
+  - Term :: произвольный тип
+  - ArgNum :: число
+  - CurrN :: число
+  - N :: число
+         
 #+begin_src prolog
 
-ocurences(Sub, Term, N):-
-        ocurences(Sub, Term, 0, N).
-
-ocurences(Sub, Term, CurrnN, N):-
+ocurences(Sub, Term, N) :-
         compound(Term),
-        functor(Term, _, ArgsCnt),
-        ocurences(Sub, Term, ArgsCnt, CurrnN, N).
+        functor(Term, _, ArgCnt),
+        compare_terms(Sub, Term, X),
+        compare_arguments(Sub, Term, ArgCnt, X, N).
 
-ocurences(Term, Term, CurrN, NewCurrN) :-
-        NewCurrN is CurrN + 1.
+ocurences(Sub, Term, N) :-
+        \+ compound(Term),
+        compare_terms(Sub, Term, N).
 
-ocurences(_, _, CurrN, CurrN).
+compare_terms(Term, Term, 1).
 
-ocurences(_, _, 0, CurrN, CurrN).
+compare_terms(Term1, Term2, 0) :-
+        \+ compare(=, Term1, Term2).
 
-ocurences(Sub, Term, ArgNum, CurrN, N) :- 
-        ArgNum > 0,
-        compare(=, Sub, Term),
-        NewCurrN is CurrN + 1,
-        NextArg is ArgNum - 1,
-        ocurences(Sub, Term, NextArg, NewCurrN, N).
-
-ocurences(Sub, Term, ArgNum, CurrN, N) :- 
-        ArgNum > 0,
-        \+ compare(=, Sub, Term),
-        arg(ArgNum, Term, Arg),        
-        ocurences(Sub, Arg, SubInArg),
-        NewCurrN is CurrN + SubInArg,
-        NextArg is ArgNum - 1,
-        ocurences(Sub, Term, NextArg, NewCurrN, N).
+compare_arguments(_, _, ArgNum, CurrN, CurrN) :-
+        =(ArgNum, 0).
+ 
+compare_arguments(Sub, Term, ArgNum, CurrN, N) :-
+        >(ArgNum, 0),
+        arg(ArgNum, Term, Arg),
+        ocurences(Sub, Arg, ArgN),
+        (NewN is ArgN + CurrN),
+        (NextArgNum is ArgNum - 1),
+        compare_arguments(Sub, Term, NextArgNum, NewN, N).
 
 #+end_src
 
 *** Тесты
 
-Для написания тестов использовалось расширение языка от SWI-Prolog:
+**** ocurences(+, +, +)
 #+begin_src prolog
-:- begin_tests(ocurences).
+?- ocurences(a, a, 1).
 
-test(t01) :-
-        ocurences(a, a, 1), !.
-test(t02) :-
-        ocurences(a, b, 0), !.
-test(t03) :-
-        ocurences(a, [a, a], 2), !.
-test(t04) :-
-        ocurences(a, node(node(a, a), node(a, null)), 3), !.
-test(t05) :-
-        ocurences(a, node(null, null), 0).
-test(t06) :-
-        ocurences(node(a, b), node(node(a, b), node(a, node(a, b))), 2).
+true 
 
-:- end_tests(ocurences).
+?- ocurences(a, b, 0).
+
+true.
+
+?- ocurences(a, [a, a], 2).
+
+true 
+
+?- ocurences(a, node(node(a, a), node(a, null)), 3).
+
+true 
+
+?- ocurences(a, node(null, null), 0).
+
+true 
+
+?- ocurences(node(a, b), node(node(a, b), node(a, node(a, b))), 2).
+
+true 
+
+
+?- ocurences(node(a, b), node(node(a, b), node(a, node(a, b))), 3).
+
+false.
+
+#+end_src
+
+**** ocurences(+, +, -)
+#+begin_src prolog
+?- ocurences(a, [b, c, d], X).
+
+X = 0 
+
+?- ocurences(a, [b, c, d], X).
+
+X = 0
+
+?- ocurences(b, [b, c, d], X).
+
+X = 1 
+
+?- ocurences([d], [d, a, b, c, d], X).
+
+X = 1 
 #+end_src
 
 ** position/3
    
 *** Исходный код
 
+- position(Sub, Term, Result) :: истина, если Result содержит список,
+     описывающий положение терма Sub в терме Term
+  - Sub :: произвольный тип
+  - Term :: произвольный тип
+  - Result :: список чисел
+    
 Будем восстанавливать порядок обхода снизу вверх:
 
 #+begin_src prolog
@@ -103,22 +157,35 @@ position(Sub, Term, N, [N | Result]) :-
 
 *** Тесты
 
+**** position(+, +, +)
+#+begin_src prolog
+
+?- position(a, a, []).
+true 
+
+?- position(c, [a, b, c], [2, 2, 1]).
+true 
+
+#+end_src
+
+**** position(+, +, -)
 #+begin_src prolog
 
 ?- position(null, null, []).
+
 true 
 
 ?- position(a, node(a), [1]).
+
 true 
 
 ?- position(a, node(b,node(a,a)), X).
+
 X = [2, 1]
+
 X = [2, 2]
-false.
 
 ?- position(a, node(b, c), X).
 false.
-
-?-     
 
 #+end_src

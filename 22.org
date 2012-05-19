@@ -11,8 +11,22 @@
    
 ** Решение
 
-Воодится вспомогательный терм substitute_each для итерации по списку,
+- substitute(Old, New, Term, Term1) :: истина, если Term1 получается
+     из терма Term заменой функторов Old на New
+  - Old :: произвольный тип
+  - New :: произвольный тип
+  - Term :: произвольный тип
+  - Term1 :: произвольный тип
+
+Вводится вспомогательный терм substitute\_each для итерации по списку,
 полученному при помощи предиката univ:
+
+- substitute\_each(Old, New, OldList, NewList) :: аналогично
+     предыдущему предикату, только для списков
+  - Old :: произвольный тип
+  - New :: произвольный тип
+  - OldList :: список
+  - OldList :: список
 
 *** Исходный код
 
@@ -44,23 +58,80 @@ substitute_each(_, _, [], []).
 
 Для тестирования используется расширения языка SWI-Prolog
 
+**** substitute(+, +, +, +)
 #+begin_src prolog
-:- begin_tests(substitute).
+substitute(a, b, a, a).
 
-test(t01) :-
-        substitute(a, b, a, b).
-test(t02) :-
-        substitute(a, b, c, c).
-test(t03) :-
-        substitute(a, b, node(a), node(b)).
-test(t04) :-
-        substitute(a, b, node(a, a), node(b, b)).
-test(t05) :-
-        substitute(node(a, b), node(c, d),
-            node(node(a, b),
-                 node(c, d)),
-            node(node(c, d),
-                 node(c, d))).
+false.
 
-:- end_tests(substitute).
+substitute(a, b, a, b).
+
+true
+
+substitute(a, b, c, c).
+
+true
+
+substitute(a, b, node(a), node(b)).
+
+true
+
+substitute(a, b, node(a, a), node(b, b)).
+
+true
+
+substitute(node(a, b), node(c, d),
+           node(node(a, b),
+                node(c, d)),
+           node(node(c, d),
+                node(c, d))).
+
+true.
+                
+#+end_src
+
+**** substitute(+, +, +, -)
+#+begin_src prolog
+?- substitute(a, b, [a, b, c], X).
+
+X = [b, b, c]
+
+?- substitute(a, b, [a, b, a], X).
+
+X = [b, b, b]
+
+?- substitute([a], [b], [[a], b, c, a], X).
+
+X = [[b], b, c, b] 
+
+?- substitute(a, b, [b, b, b], X).
+
+X = [b, b, b] 
+
+#+end_src
+
+**** substitute(+, -, +, +)
+#+begin_src prolog
+substitute(a, X, [a], [b]).
+
+X = b
+
+#+end_src
+
+**** substitute(-, +, +, +)
+#+begin_src prolog
+substitute(X, b, [a], [b]).
+
+Y = a
+
+#+end_src
+
+
+**** substitute(-, -, +, +)
+#+begin_src prolog
+substitute(X, Y, [a], [b]).
+
+X = [a],
+Y = [b] 
+
 #+end_src

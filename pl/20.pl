@@ -27,36 +27,32 @@ test(test04) :- \+
 
 :- end_tests(subterm).
 
-ocurences(Sub, Term, N):-
-        ocurences(Sub, Term, 0, N).
-
-ocurences(Sub, Term, CurrnN, N):-
+ocurences(Sub, Term, N) :-
         compound(Term),
-        functor(Term, _, ArgsCnt),
-        ocurences(Sub, Term, ArgsCnt, CurrnN, N).
+        functor(Term, _, ArgCnt),
+        compare_terms(Sub, Term, X),
+        compare_arguments(Sub, Term, ArgCnt, X, N).
 
-ocurences(Term, Term, CurrN, NewCurrN) :-
-        NewCurrN is CurrN + 1.
+ocurences(Sub, Term, N) :-
+        \+ compound(Term),
+        compare_terms(Sub, Term, N).
 
-ocurences(_, _, CurrN, CurrN).
+compare_terms(Term, Term, 1).
 
-ocurences(_, _, 0, CurrN, CurrN).
+compare_terms(Term1, Term2, 0) :-
+        \+ compare(=, Term1, Term2).
 
-ocurences(Sub, Term, ArgNum, CurrN, N) :- 
-        ArgNum > 0,
-        compare(=, Sub, Term),
-        NewCurrN is CurrN + 1,
-        NextArg is ArgNum - 1,
-        ocurences(Sub, Term, NextArg, NewCurrN, N).
-
-ocurences(Sub, Term, ArgNum, CurrN, N) :- 
-        ArgNum > 0,
-        \+ compare(=, Sub, Term),
-        arg(ArgNum, Term, Arg),        
-        ocurences(Sub, Arg, SubInArg),
-        NewCurrN is CurrN + SubInArg,
-        NextArg is ArgNum - 1,
-        ocurences(Sub, Term, NextArg, NewCurrN, N).
+compare_arguments(_, _, ArgNum, CurrN, CurrN) :-
+        =(ArgNum, 0).
+ 
+compare_arguments(Sub, Term, ArgNum, CurrN, N) :-
+        >(ArgNum, 0),
+        arg(ArgNum, Term, Arg),
+        ocurences(Sub, Arg, ArgN),
+        (NewN is ArgN + CurrN),
+        (NextArgNum is ArgNum - 1),
+        compare_arguments(Sub, Term, NextArgNum, NewN, N).
+        
 
 :- begin_tests(ocurences).
 
