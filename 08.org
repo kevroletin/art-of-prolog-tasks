@@ -6,11 +6,21 @@
 
 * Задание 
 ** Условие
-   (3.3iii) Написать программу для отношения no_doubles/2.
+
+   (3.3iii) Написать программу для отношения no\_doubles/2.
+
 ** Решение
 
 *** Исходный код
 
+- member\_(Xs, Y) :: истина, если Y содержится в списке Xs
+  + Xs :: список
+  + Y :: произвольный тип
+
+- not\_member(Xs, Y) :: истина, если Y *не* содержится в списке Xs
+  + Xs :: список
+  + Y :: произвольный тип
+         
 #+begin_src prolog
 member_([], _) :- false.
 member_([X | _ ], X).
@@ -26,6 +36,12 @@ not_member([X | Xs], Y) :-
         not_member(Xs, Y).
 #+end_src
     
+- no\_doubles(Xs, Ys) :: истина, если Ys получается из Xs после
+     удаления повторяющихся элементов(для каждой группы повторяющихся
+     элементов оставляется последний)
+  + Xs :: Список
+  + Ys :: Список
+
 #+begin_src prolog
 no_doubles([], []).
 no_doubles([X | Xs], [X | Ys]) :-
@@ -40,16 +56,47 @@ no_doubles([X | Xs], Ys) :-
 
 *** Тесты
 
+**** no\_doubles(+, +)
 #+begin_src prolog
-| ?- no_doubles([a, a, a, b, b, c, b, d, e, e, a], X).
+?- no_doubles([1, 2, 3], [1, 2, 3]).
+
+true 
+
+?- no_doubles([1, 1, 2, 3, 1], [2, 3, 1]).
+
+true 
+
+?- no_doubles([1, 1, 2, 3, 1], [1, 2, 3, 1]).
+
+false.
+
+#+end_src
+     
+**** no\_doubles(+, -)
+#+begin_src prolog
 no_doubles([a, a, a, b, b, c, b, d, e, e, a], X).
 
-X = [c,b,d,e,a] ? 
+X = [c,b,d,e,a] ?
 
-
-yes
-| ?- no_doubles([], X).
 no_doubles([], X).
 
 X = []
+
+no_doubles([1, 2, 3], X).
+
+X = [1, 2, 3] 
+
+?- no_doubles([1, 2, 3], X).
+
+X = [1, 2, 3]
+
+
+?- no_doubles([1, 2, 3, 2, 3, 1], X).
+
+X = [2, 3, 1]
+
+?- no_doubles([1, 2, 3, 4, 2, 3, 1], X).
+
+X = [4, 2, 3, 1]
+
 #+end_src

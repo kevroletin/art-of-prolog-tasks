@@ -9,26 +9,138 @@
 ** Условие
    double/2
 
+double(Xs,Ys) is true if every element in the list Xs appears twice in
+the list Ys.
+   
 ** Решение
 
 *** Исходный код
 
+- double(Xs, Ys) :: истина, если каждый элемент из списка Xs
+                    встречается в списке Ys дважды
+  - Xs :: список
+  - Ys :: список
+Для решения введены 2 вспомогательных предиката:
+    
+- select(X, Ys, Zs) :: иcтина, если Zs получает из Ys удалением
+     элемента со значением X
+  + X :: произвольный тип
+  + Ys :: список
+  + Zs :: список
+- permutation(Xs, Ys) :: истина, если Xs является перестановкой Ys
+  + Xs :: список
+  + Ys :: список
+
 #+begin_src prolog
-double(X, Y) :- append(X, X, Y).
+select(X, [X | Xs], Xs).
+select(X, [Y | Ys], [Y | Zs]) :-
+        select(X, Ys, Zs).
+
+permutation(Xs, [Z | Zs]) :-
+        select(Z, Xs, Ys),
+        permutation(Ys, Zs).
+
+permutation([], []).
+
+double(Xs, Ys) :-
+        append(Xs, Xs, Zs),
+        permutation(Zs, Ys).
+
 #+end_src
     
 *** Тесты
+
+**** double(+, +)
 #+begin_src prolog
-| ?- double([a, b, c], X).
-double([a, b, c], X).
+?- double([1], [1, 1]).
+true 
 
-X = [a,b,c,a,b,c]
+?- double([1, 2], [1, 2, 3, 1]).
+false.
 
-yes
-| ?- double([], X).
-double([], X).
+?- double([1, 2], [1, 2, 2, 1]).
+true .
 
-X = []
+?- double([1, 2], [1, 1, 2, 2]).
+true 
 
-yes
+?- double([1, 2], [1, 2, 1, 2]).
+true 
+
+?- double([1, 2], [2, 2, 1, 1]).
+true 
+#+end_src
+
+**** double(-, +)
+#+begin_src prolog
+?- double(X, [1, 1, 2, 2]).
+
+X = [1, 2]
+
+X = [1, 2]
+
+X = [2, 1]
+
+X = [2, 1]
+
+X = [1, 2]
+
+X = [1, 2]
+
+X = [2, 1]
+
+X = [2, 1]
+#+end_src
+
+**** double(+, -)
+#+begin_src prolog
+?- double([1, 2], X).
+
+X = [1, 2, 1, 2]
+
+X = [1, 2, 2, 1]
+
+X = [1, 1, 2, 2]
+
+X = [1, 1, 2, 2]
+
+X = [1, 2, 2, 1]
+
+X = [1, 2, 1, 2]
+
+X = [2, 1, 1, 2]
+
+X = [2, 1, 2, 1]
+
+X = [2, 1, 1, 2]
+
+X = [2, 1, 2, 1]
+
+X = [2, 2, 1, 1]
+
+X = [2, 2, 1, 1]
+
+X = [1, 1, 2, 2]
+
+X = [1, 1, 2, 2]
+
+X = [1, 2, 1, 2]
+
+X = [1, 2, 2, 1]
+
+X = [1, 2, 1, 2]
+
+X = [1, 2, 2, 1]
+
+X = [2, 1, 2, 1]
+
+X = [2, 1, 1, 2]
+
+X = [2, 2, 1, 1]
+
+X = [2, 2, 1, 1]
+
+X = [2, 1, 1, 2]
+
+X = [2, 1, 2, 1]
 #+end_src

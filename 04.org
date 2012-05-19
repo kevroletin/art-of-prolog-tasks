@@ -6,40 +6,112 @@
 
 * Задание4
 ** Условие
-adjacent/3 и last/2 с использованием append.
-** Решение
-   
-*** Исходный код
 
+   adjacent/3 и last/2 с использованием append.
+
+** adjacent
+   
++ adjacent(List, A, B) :: истина, если елементы со значениями A и B
+     находятся в списке List на соседних позициях
+  - List :: список
+  - A :: произвольний тип
+  - B :: произвольный тип
+
+*** Исходный код
+        
 #+begin_src prolog
 adjacent(List, A, B) :-
         list(List),
         append( _ , [A | [ B | _ ] ], List).        
+
+adjacent(List, A, B) :-
+        list(List),
+        append( _ , [B | [ A | _ ] ], List).        
 #+end_src
 
 *** Тесты
 
+**** adjacent(+, +, +)
 #+begin_src
-| ?- adjacent([a, b, c, d, e], X, Y). a
-adjacent([a, b, c, d, e], X, Y). a
+adjacent([a, b, c, d], a, b).
+true
 
-X = a
-Y = b ? 
-
-X = b
-Y = c
-
-X = c
-Y = d
-
-X = d
-Y = e
-
-no
+adjacent([a, b, c, d], b, a).
+true
 #+end_src
 
-** Решение
-    
+**** adjacent(+, -, -)
+#+begin_src
+adjacent([a, b, c], X, Y).
+
+X = a,
+Y = b
+
+X = b,
+Y = c
+
+X = b,
+Y = a
+
+X = c,
+Y = b
+#+end_src
+
+**** adjacent(+, +, -)
+#+begin_src prolog
+adjacent([a, b, c, d, e], b, X).
+
+X = c
+
+X = a
+#+end_src
+
+**** adjacent(+, -, +)
+#+begin_src prolog
+adjacent([a, b, c, d, e], X, a).
+
+X = b
+#+end_src
+
+**** adjacent(-, +, +)
+#+begin_src prolog
+adjacent(X, a, b).
+
+X = [a, b]
+
+X = [a, b, _G483]
+
+X = [_G477, a, b]
+
+X = [a, b, _G483, _G486]
+
+X = [_G477, a, b, _G486]
+
+X = [_G477, _G480, a, b]
+
+X = [a, b, _G483, _G486, _G489]
+
+X = [_G477, a, b, _G486, _G489]
+
+X = [_G477, _G480, a, b, _G489]
+
+X = [_G477, _G480, _G483, a, b]
+
+X = [a, b, _G483, _G486, _G489, _G492]
+
+X = [_G477, a, b, _G486, _G489, _G492] 
+
+...
+#+end_src
+
+
+
+** last/2
+
+- last\_(List, X) :: истина, если X - последний элемент в списке List
+  + List :: список
+  + X :: произвольный тип
+   
 #+begin_src prolog
 last_(List, X) :-
         list(List),
@@ -47,16 +119,44 @@ last_(List, X) :-
 #+end_src
 
 *** Тесты
+
+**** last\_(+, +).
 #+begin_src prolog
-| ?- last_([a, b, c], X).
+last_([a, b, c], c).
+true
+
+last_([a, b, c], d).
+false.
+
+#+end_src
+    
+**** last\_(+, -).
+#+begin_src prolog
 last_([a, b, c], X).
 
 X = c
 
-yes
-| ?- last_([], X).
 last_([], X).
 
 no
 #+end_src
+
+**** last\_(-, +).
+#+begin_src prolog
+last_(X, a).
+
+X = [a] 
+
+X = [_G280, a]
+
+X = [_G280, _G283, a]
+
+X = [_G280, _G283, _G286, a]
+
+X = [_G280, _G283, _G286, _G289, a]
+
+...
+#+end_src
+
+
 

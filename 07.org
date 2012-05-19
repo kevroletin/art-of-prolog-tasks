@@ -9,6 +9,13 @@
 (3.3i) Написать программу для отношения substitute/3. 
 ** Решение
 
+- substitute(X, Y, L1, L2) :: истина, если L2 получается из L1 заменой
+     всех элементов Y на X
+  + X :: произвольный тип
+  + Y :: произвольный тип
+  + L1 :: список
+  + L2 :: список
+
 *** Исходный код
 
 #+begin_src prolog
@@ -25,9 +32,45 @@ substitute(X, Y, [X | Xs], [Y | Ys]) :-
 
 *** Тесты
 
+**** substitute(+, +, +, +).
 #+begin_src prolog
-| ?- substitute(a, b, [a, b, c, d, a], X). a
-substitute(a, b, [a, b, c, d, a], X). a
+substitute(a, b, [a, c, a, d], [b, c, b, d]).
 
-X = [b,b,c,d,b] ? 
+true 
+
+substitute(a, b, [a, c, a, d], [a, c, a, d]).
+
+false.
 #+end_src
+
+**** substitute(+, +, +, -)
+#+begin_src prolog
+substitute(a, b, [a, b, c, d, a], X).
+
+X = [b,b,c,d,b]
+#+end_src
+
+**** substitute(-, -, +, +)
+#+begin_src prolog
+substitute(X, Y, [a, c, a, d], [b, c, b, d]).
+
+X = a,
+Y = b
+
+#+end_src prolog
+
+**** substitute(+, -, +, +)
+#+begin_src prolog
+substitute(a, Y, [a, c, a, d], [b, c, b, d]).
+
+Y = b
+
+#+end_src prolog
+
+**** substitute(-, +, +, +)
+#+begin_src prolog
+substitute(X, b, [a, c, a, d], [b, c, b, d]).
+
+X = a
+
+#+end_src prolog

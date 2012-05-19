@@ -1,11 +1,18 @@
 /* --- lists --- */
 
+list([]).
+list([_ | Xs]) :- list(Xs).
+
 /* 1
    adjacent/3 и last/2 с использованием append. */
 
 adjacent(List, A, B) :-
         list(List),
         append( _ , [A | [ B | _ ] ], List).        
+
+adjacent(List, A, B) :-
+        list(List),
+        append( _ , [B | [ A | _ ] ], List).        
 
 /* Tests
 
@@ -69,13 +76,13 @@ yes
 
 
 /* 3
-   sum/2 с использованием plus/3 и без. */
+   sum/2 с использованием plus_/3 и без. */
 
 sum([], 0).
 sum([X | Xs], Y) :-
         list(Xs),
-        sum(Xs, Z),
-        plus(X, Z, Y).
+        plus_(X, Z, Y),
+        sum(Xs, Z).
 
 sum_([], 0).
 sum_([0 | Xs], Y) :-
@@ -89,13 +96,13 @@ sum_([s(X) | Xs], s(Y)) :-
 natural_number(0).
 natural_number(s(X)) :- natural_number(X).
 
-plus(A, 0, A) :-
+plus_(A, 0, A) :-
         natural_number(A).
 
-plus(A, s(B), s(Res)) :-
+plus_(A, s(B), s(Res)) :-
         natural_number(A),
         natural_number(B),
-        sum(A, B, Res).
+        plus_(A, B, Res).
 
 /*
 | ?- sum([s(0)], X). a

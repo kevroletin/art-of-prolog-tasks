@@ -9,6 +9,11 @@
 sum/2 с использованием plus/3 и без
 ** Решение 1
 
+- plus(A, B, C) :: истина, если C = A + B
+  + A :: natural\_number
+  + B :: natural\_number
+  + C :: natural\_number
+   
 #+begin_src prolog
 natural_number(0).
 natural_number(s(X)) :- natural_number(X).
@@ -19,8 +24,12 @@ plus(A, 0, A) :-
 plus(A, s(B), s(Res)) :-
         natural_number(A),
         natural_number(B),
-        sum(A, B, Res).
+        plus(A, B, Res).
 #+end_src
+
+- sum(Xs, X) :: истина, если X равен сумме элементов списка Xs
+  + Xs :: список, каждый элемент которого имеет тип natural\_number
+  + X :: natural\_number
 
 *** Исходный код
 
@@ -34,52 +43,57 @@ sum([X | Xs], Y) :-
 
 *** Тесты
 
+**** sum(+, +)
+
+sum([s(0)], s(0)).
+
+true
+
+?- sum([s(0), s(s(0))], s(s(s(0)))).
+
+true
+
+?- sum([s(0), s(s(0))], s(s(0))).
+
+false
+
+**** sum(+, -)
+    
 #+begin_src prolog
 % sum([ 1 ]) = 1
-| ?- sum([s(0)], X). a
-sum([s(0)], X). a
+sum([s(0)], X).
 
-X = s(0) ? 
-
-no
+X = s(0)
 
 % sum([ 2 ]) = 2
-| ?- sum([s(s(0))], X). a
-sum([s(s(0))], X). a
+sum([s(s(0))], X).
 
-X = s(s(0)) ? 
-
-no
+X = s(s(0))
 
 % sum([2, 1]) = 3
-| ?- sum([s(s(0)), s(0)], X). a
-sum([s(s(0)), s(0)], X). a
+sum([s(s(0)), s(0)], X).
 
-X = s(s(s(0))) ? 
-
-no
+X = s(s(s(0)))
 
 %sum([2, 2]) = 4
-| ?- sum([s(s(0)), s(s(0))], X). a
-sum([s(s(0)), s(s(0))], X). a
+sum([s(s(0)), s(s(0))], X).
 
-X = s(s(s(s(0)))) ? 
-
-no
+X = s(s(s(s(0))))
 
 %sum([2, 2, 1]) = 5
-| ?- sum([s(s(0)), s(s(0)), s(0)], X). a
-sum([s(s(0)), s(s(0)), s(0)], X). a
+sum([s(s(0)), s(s(0)), s(0)], X).
 
-X = s(s(s(s(s(0))))) ? 
+X = s(s(s(s(s(0)))))
 
-no
-| ?- sum([s(s(0)), s(s(0)), s(0)], X). a
 #+end_src
 
 ** Решение 2
 
 *** Исходный код
+
+- sum\_(Xs, X) :: истина, если X равен сумме элементов списка Xs
+  + Xs :: список, каждый элемент которого имеет тип natural\_number
+  + X :: natural\_number
 
 #+begin_src prolog
 sum_([], 0).
@@ -93,24 +107,67 @@ sum_([s(X) | Xs], s(Y)) :-
 
 *** Тесты
 
+**** sum\_(+, +)
+#+begin_src prolog
+sum([s(0)], s(0)).
+
+true 
+
+?- sum_([s(0)], s(0)).
+
+true 
+
+?- sum_([s(0), s(s(0))], s(s(s(0)))).
+
+true 
+
+?- sum_([s(0), s(s(0))], s(s(0))).
+
+false.
+#+end_src
+
+**** sum_(+, -)
 #+begin_src prolog
 %sum([2, 2, 1]) = 5
-| ?- sum_([s(s(0)), s(s(0)), s(0)], X). a
-sum_([s(s(0)), s(s(0)), s(0)], X). a
+sum_([s(s(0)), s(s(0)), s(0)], X).
 
-X = s(s(s(s(s(0))))) ? 
-
-no
+X = s(s(s(s(s(0)))))
 
 %sum([]) = 0
-| ?- sum_([], X). a
-sum_([], X). a
+sum_([], X).
 
 X = 0
 
-yes
-| ?-
 #+end_src
 
+**** sum\_(-, +)
 
+#+begin_src prolog
+sum_(X, s(s(s(0)))).
+
+X = [0, s(s(s(0)))]
+
+X = [0, 0, s(s(s(0)))]
+
+X = [0, s(0), s(s(0))]
+
+X = [0, s(s(0)), s(0)]
+
+X = [0, s(s(s(0))), 0]
+
+X = [0, 0, 0, s(s(s(0)))]
+
+X = [0, 0, s(0), s(s(0))]
+
+X = [0, 0, s(s(0)), s(0)]
+
+X = [0, 0, s(s(s(0))), 0]
+
+X = [0, s(0), 0, s(s(0))]
+
+X = [0, s(0), s(0), s(0)]
+
+X = [0, s(0), s(s(0)), 0]    
+
+#+end_src
      
