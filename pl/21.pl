@@ -9,7 +9,8 @@ plus(X, Y, Z) :-
 
 plus(X, Y, Z) :-
         nonvar(Z),
-        inc_dec(Z, X, Y).
+        between(0, Z, X),
+        Y is Z - X.
 
 plus(X, Y, Z) :-
         nonvar(Y),
@@ -18,18 +19,6 @@ plus(X, Y, Z) :-
 plus(X, Y, Z) :-
         nonvar(X),
         inc_inc(X, Y, Z).
-
-inc_dec(X, Y, Z) :-
-        inc_dec(0, X, Y, Z).
-
-inc_dec(Y, Z, Y, Z) :-
-        Z >= 0.
-
-inc_dec(Y, Z, RY, RZ) :-
-        Z > 0,
-        Y1 is Y + 1,
-        Z1 is Z - 1,
-        inc_dec(Y1, Z1, RY, RZ).
 
 inc_inc(X, Y, Z) :-
         inc_inc(0, X, Y, Z).

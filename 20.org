@@ -125,6 +125,52 @@ X = 1
 X = 1 
 #+end_src
 
+**** ocurences(-, +, +)
+#+begin_src prolog
+
+?- ocurences(X, a, 10).
+false.
+
+?- ocurences(X, a, 1).
+X = a 
+
+?- ocurences(X, node(a, a), 1).
+X = node(a, a) 
+
+?- ocurences(X, node(a, a), 2).
+X = a 
+
+?- ocurences(X, node(a, a), 3).
+false.
+#+end_src
+
+**** ocurences(-, +, -)
+#+begin_src prolog
+
+?- ocurences(X, a, Y).
+
+X = a,
+Y = 1
+     
+?- ocurences(X, node(nil, node(a, b)), Y).
+
+X = node(nil, node(a, b)),
+Y = 1
+
+X = node(a, b),
+Y = 1
+
+X = b,
+Y = 1
+
+X = a,
+Y = 1
+
+X = nil,
+Y = 1
+
+#+end_src
+
 ** position/3
    
 *** Исходный код
@@ -187,5 +233,54 @@ X = [2, 2]
 
 ?- position(a, node(b, c), X).
 false.
+
+#+end_src
+
+**** position(-, +, +)
+#+begin_src prolog
+?- position(X, [a, a, b, c], [1]).
+X = a
+
+?- position(X, [a, a, b, c], [2, 1]).
+X = a 
+
+?- position(X, [a, a, b, c], [2, 2, 1]).
+X = b 
+#+end_src
+
+**** position(-, +, -)
+#+begin_src prolog
+
+?- position(X, node(nill, nill), Y).
+X = node(nill, nill),
+Y = []
+
+X = nill,
+Y = [1]
+
+X = nill,
+Y = [2]
+
+?- position(X, [a, b, c], Y).
+X = [a, b, c],
+Y = []
+
+X = a,
+Y = [1]
+
+X = [b, c],
+Y = [2]
+
+X = b,
+Y = [2, 1]
+
+X = [c],
+Y = [2, 2]
+
+X = c,
+Y = [2, 2, 1]
+
+X = [],
+Y = [2, 2, 2]
 
 #+end_src
