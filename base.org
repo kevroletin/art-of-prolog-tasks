@@ -15,10 +15,3 @@
 
 *** Тесты
 
-**** Входные данные
-#+begin_src prolog
-#+end_src
-
-**** Запросы
-#+begin_src prolog
-#+end_src

@@ -1,0 +1,118 @@
+#+TITLE:        ИИ
+#+AUTHOR:       Кевролетин В.В. группа с8503а(256)
+#+EMAIL:        kevroletin@gmial.com
+#+LANGUAGE:     russian
+#+LATEX_HEADER: \usepackage[cm]{fullpage}
+
+* Задание 1
+** Условие
+   Дополнить программу ANALOGY для того, чтобы решить три задачи с
+   данными на рис.
+   
+#+LABEL pic1:simple_pr
+#+CAPTION: простой решатель
+#+ATTR_LaTeX: width=480px
+[[./img/analogy-ex.jpg]]
+
+** Решение
+
+Рассмотрим 3 случая отдельно.
+
+*** i
+
+На рисунке А треугольник находится на правой границе
+квадрата. Обозначим этот факт следующим образом:
+#+begin_src prolog
+on_right_side(triangle, square)
+#+end_src
+В предложенных вариантах появились новые фигуры: половинки
+круга. Обозначим их
+#+begin_src prolog
+left_half_circle
+bottom_half_circle
+#+end_src
+Так же введём новое отношение которое означает, что внутренняя фигура
+сдвинулась влево:
+#+begin_src prolog
+match(on_right_side(Figure1, Figure2), inside(Figure1, Figure2), moved_left).
+#+end_src
+
+Сделанных изменений достаточно для получения правильного результата:
+#+begin_src prolog
+figures(test2, on_right_side(triangle, square),
+               inside(triangle, square),
+               on_right_side(left_half_circle, square)).
+
+answers(test2, [above(bottom_half_circle, square),
+                on_right_side(left_half_circle, square),
+                inside(left_half_circle, square),
+                inside(nothing, square),
+                on_left_side(left_half_circle, square)]).
+
+
+?- test_analogy(test2, X).
+X = inside(left_half_circle, square) 
+
+?- 
+#+end_src
+
+*** ii
+
+Для этого случая необходимо представить отсутствие геометрической
+фигуры термом:
+#+begin_src prolog
+nothing
+#+end_src
+А так же ввести новое отношение, которое означает, что из исходной
+составной фигуры удалили её внутреннюю часть
+#+begin_src prolog
+match(inside(Figure1, Figure2), inside(Figure1, nothing), internal_removed).
+#+end_src
+
+Запуск на входных данных:
+#+begin_src prolog
+
+figures(test3, inside(triangle, triangle),
+               inside(triangle, nothing),
+               inside(circle, square)).
+
+answers(test3, [inside(circle, circle),
+                inside(nothing, square),
+                inside(circle, triangle),
+                inside(circle, nothing),
+                inside(triangle, nothing)]).
+
+?- test_analogy(test3, X).
+X = inside(circle, nothing) 
+
+?- 
+#+end_src
+
+*** iii
+
+Для этого случая необходимо учесть случай вложенности 3х фигур  и
+ввести подходящее отношение:
+#+begin_src prolog
+match(inside(F1, F2), inside(F1, inside(F2, F1)), deep_nested).
+#+end_src
+
+Тогда получим:
+#+begin_src prolog
+figures(test4, inside(circle, circle),
+               inside(circle, inside(circle, circle)),
+               inside(square, square)).
+
+answers(test4, [inside(nothing, square),
+                inside(square, square),
+                inside(square, inside(square, square)),
+                inside(square, inside(nothing, square)),
+                inside(square, nothing)]).
+
+
+?- test_analogy(test4, X).
+X = inside(square, inside(square, square)) 
+
+?- 
+#+end_src
+
+    
