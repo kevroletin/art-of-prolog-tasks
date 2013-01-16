@@ -1,0 +1,148 @@
+#+TITLE:        Логическое программирование
+#+AUTHOR:       Кевролетин В.В. группа с8403а(246)
+#+EMAIL:        kevroletin@gmial.com
+#+LANGUAGE:     russian
+#+LATEX_HEADER: \usepackage[cm]{fullpage}
+
+* Задание 3
+** Условие
+
+Write a program to solve the following logic puzzle (Einstein's Logic Problem, Zebra puzzle, Einstein's Puzzle or Einstein's Riddle, etc.). There are five houses, each of a different color and inhabited by a man of a different nationality, with a different pet, drink, and brand of cigarettes. 
+(a)The Englishman lives in the red house. 
+(b)The Spaniard owns the dog. 
+(c)Coffee is drunk in the green house. 
+(d)The Ukrainian drinks tea. 
+(e)The green house is immediately to the right (your right) of the ivory house. 
+(f)The Winston smoker owns snails. 
+(g) Kools are smoked in the yellow house, 
+(h) Milk is drunk in the middle house. 
+(i) The Norwegian lives in the first house on the left. 
+(j) The man who smokes Chesterfields lives in the house next to the man with the fox. 
+(k) Kools are smoked in the house next to the house where the horse is kept. 
+(1) The Lucky Strike smoker drinks orange juice. 
+(m) The Japanese smokes Parliaments. 
+(n) The Norwegian lives next to the blue house.
+
+Who owns the Zebra? Who drinks water?   
+** Решение
+
+*** Исходный код
+
+На улице расположены пять домов. Каждый дом характеризуется 5ю
+разными признаками(цвет, национальность жильца, домашнее животное,
+напиток, марка сигарет). Перечисленные в условии высказывания
+накладывают ограничения на принадлежность признаков к конкретному
+дому. Удачно подобранные ограничения оставляют узкое множество
+допустимых распределений признаков, пригодное для того, чтобы
+однозначно ответить на поставленные вопросы.
+
+Программа, написанная на языке программирования Пролог генерирует
+всевозможные варианты и, используя данные в условии ограничения,
+отбрасывает недопустимые варианты. Используя оставшееся множество
+генерируются ответы на данные в условии вопросы:
+
+#+begin_src prolog
+% house(color, nationality, pet, drink, cigarettes)
+house(house(_, _, _, _, _)).
+structure([A, B, C, D, E]) :- house(A), house(B), house(C), house(D), house(E).
+
+solve_puzzle(Ans) :-
+        structure(Street),
+        clues(Street),
+        queries(Street, Ans).
+#+end_src
+
+Вопросы
+#+begin_src prolog
+queries(Street, [[X, 'owns the Zebra'], [Y, 'drinks water']]) :-
+        member(house(_, X, zebra, _, _), Street),
+        member(house(_, Y, _, water, _), Street).
+#+end_src
+        
+Ограничения
+
+(т.к. ограничений достаточно большое количество они
+записаны, по возможности в более компактной форме), т.е вместо
+#+begin_src prolog
+color(house(Color, _, _, _, _), Color).
+nationality(house(_, X, _, _, _), X).
+
+clues(Street) :-
+...
+     color(House1, res),
+     nationality(House1, englishman),
+     member(House1, Street)
+...
+#+end_src
+используется запись
+#+begin_src prolog
+clues(Street) :-
+    member(house(red, englishman, _, _, _), Street)
+#+end_src
+
+В итоге:
+
+#+begin_src prolog
+im_to_right(X, Y, [X,Y|_]).
+im_to_right(X, Y, [_|T]) :- im_to_right(X, Y, T).
+
+near(X, Y, L) :- im_to_right(X, Y, L).
+near(X, Y, L) :- im_to_right(Y, X, L).
+
+% house(color, nationality, pet, drink, cigarettes)
+house(house(_, _, _, _, _)).
+structure([A, B, C, D, E]) :- house(A), house(B), house(C), house(D), house(E).
+
+first_house([A, _, _, _, _], A).
+middle_house([_, _, C, _, _], C).
+
+clues(Street) :-
+        member(house(red, englishman, _, _, _), Street),
+        % The Englishman lives in the red house
+        member(house(_, spaniard, dog, _, _),   Street),
+        % The Spaniard owns the dog
+        member(house(green, _, _, coffee, _),   Street),
+        % Coffee is drunk in the green house
+        member(house(_, ukrainian, _, tea, _),  Street),
+        % The Ukrainian drinks tea
+        im_to_right(house(green, _, _, _, _),
+                    house(ivory, _, _, _, _),   Street),
+        % The green house is immediately to the right (your right) of the ivory house
+        member(house(_, _, snails, _, winston), Street),
+        % The Winston smoker owns snails
+        member(house(yellow, _, _, _, kools),   Street),
+        % Kools are smoked in the yellow house
+        middle_house(Street, house(_, _, _, milk, _)),
+        % Milk is drunk in the middle house
+        first_house(Street, house(_, norwegian, _, _, _)),
+        % The Norwegian lives in the first house on the left
+        near(house(_, _, _, _, chesterfields),
+             house(_, _, fox, _, _),            Street),
+        % The man who smokes Chesterfields lives in the house next to the man with the fox
+        near(house(_, _, _, _, kools),
+             house(_, _, horse, _, _),          Street),
+        % Kools are smoked in the house next to the house where the horse is kept
+        member(house(_, _, _, juice, lucky_strike),   Street),
+        % The Lucky Strike smoker drinks orange juice
+        member(house(_, japanese, _, _, parliaments), Street),
+        % The Japanese smokes Parliaments
+        near(house(_, norwegian, _, _, _),
+             house(blue, _, _, _, _), Street).
+        % The Norwegian lives next to the blue house
+#+end_src
+        
+*** Тесты
+
+Написанная программа позволяет однозначно ответить на поставленные в
+условии вопросы.    
+    
+#+begin_src prolog
+| ?- solve_puzzle(X). a
+solve_puzzle(X). a
+
+X = [[japanese,'owns the Zebra'],[norwegian,'drinks water']] ? 
+
+(20 ms) no
+| ?-
+#+end_src
+

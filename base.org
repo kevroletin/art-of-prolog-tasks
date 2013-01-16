@@ -1,8 +1,8 @@
 #+TITLE:        Логическое программирование
-#+AUTHOR:       Кевролетин В.В. группа с8403а(246)
+#+AUTHOR:       Кевролетин В.В. группа с8503а(256)
 #+EMAIL:        kevroletin@gmial.com
 #+LANGUAGE:     russian
-#+LATEX_HEADER: \usepackage[cm]{fullpage}
+#+LATEX_HEADER: \usepackage[russian]{babel} \usepackage[T2A]{fontenc} \usepackage[utf8]{inputenc} \usepackage[cm]{fullpage}
 
 * Задание 
 ** Условие
@@ -14,4 +14,4 @@
 #+end_src
 
 *** Тесты
-
+    

@@ -8,7 +8,7 @@ contain(add(_, A), A).
 contain(sub(A, _), A).
 contain(sub(_, A), A).
 contain(reg(_, A), B) :- contain(A, B).
-contain([X|Xs], A) :- contain(X, A).
+contain([X|_], A) :- contain(X, A).
 contain([X|Xs], A) :- \+ contain(X, A), contain(Xs, A).
 
 
@@ -55,6 +55,14 @@ transform(State1, State2, Visited, [Action | Actions]) :-
         \+ member(NewState,Visited),
         transform(NewState, State2, [NewState | Visited], Actions).
 
+suggeset(load(Reg), State1, State2) :-
+        perform_action(add(Reg), State1, NewState),
+        get_data(accum, NewState, AccumData),
+        contain(State2, AccumData).
+suggeset(sub(Reg), State1, State2) :-
+        perform_action(add(Reg), State1, NewState),
+        get_data(accum, NewState, AccumData),
+        contain(State2, AccumData).
 suggeset(add(Reg), State1, State2) :-
         perform_action(add(Reg), State1, NewState),
         get_data(accum, NewState, AccumData),
@@ -67,20 +75,33 @@ choose_action(Action, State1, State2) :-
 choose_action(Action, State, _) :-
         legal_action(Action, State).
 
+transform_test(t3, X) :-
+        initial_state(State),
+        transform(State, [reg(accum, c1)], X).
+transform_test(t4, X) :-
+        initial_short_state(State),
+        transform(State, [reg(accum, c2)], X).
+transform_test(t5, X) :-
+        initial_short_state(State),
+        transform(State, [sub(c1, c2)], X).
+transform_test(t7, X) :-
+        initial_state(State),
+        transform(State, [add(sub(c1, c2), sub(c3, c4))], X).
+
 transform_test(t1) :-
         transform([], [], []),
         transform([reg(accum, 0), reg(r1, 0)], [reg(accum, 0), reg(r1, 0)], []).
 transform_test(t2) :-
         initial_state(State),
         transform(State, [reg(accum, 0)], []).
-transform_test(t3) :-
-        initial_state(State),
-        transform(State, [reg(accum, c1)], [add(r1)]).
-transform_test(t4) :-
-        initial_state(State),
-        transform(State, [reg(accum, c2)], [add(r2)]).
+transform_test(t3) :- transform_test(t3, [load(r1)]).
+transform_test(t4) :- transform_test(t4, [load(r2)]).
+transform_test(t6) :-
+        initial_short_state(State),
+        transform(State, [reg(accum,sub(c1,c2))], [load(r1), sub(r2)]).
 
-initial_state([reg(accum, 0), reg(r1, c1), reg(r2, c2)]).
+
+initial_short_state([reg(accum, 0), reg(r1, c1), reg(r2, c2)]).
 
 
 register([reg(Reg, _) | _], Reg) :- Reg \== accum.
@@ -90,6 +111,7 @@ legal_action(add(Reg), State) :- register(State, Reg).
 legal_action(sub(Reg), State) :- register(State, Reg).
 legal_action(load(Reg), State)  :- register(State, Reg).
 legal_action(store(Reg), State) :- register(State, Reg).
+
 
 get_data(Reg, [reg(Reg, Data) | _], Data).
 get_data(Reg, [reg(AnothreReg, _)| Xs], Data) :-
@@ -104,8 +126,7 @@ set_data(Reg, NewData, [reg(AnothreReg, Data) | Xs], [reg(AnothreReg, Data) | Re
 substruct(A, A, 0).
 substruct(A, B, sub(A, B)) :- A \== B.
 add(0, A, A).
-add(A, 0, A) :- A \== 0
-.
+add(A, 0, A) :- A \== 0.
 add(A, B, add(A, B)) :- A \== 0, B \==0.
 
 perform_action(add(Reg), State, NewState) :-
@@ -137,7 +158,7 @@ perform_actions([Act | Xs], State, NewState) :-
         perform_action(Act, State, State2),
         perform_actions(Xs, State2, NewState).
 
-%initial_state([reg(accum, 0), reg(r1, c1), reg(r2, c2), reg(r3, c3), reg(r4, c4)]).
+initial_state([reg(accum, 0), reg(r1, c1), reg(r2, c2), reg(r3, c3), reg(r4, c4)]).
 unit_test_data(_, X) :- initial_state(X).
 unit_test_actions(test1, [load(r1)]).
 unit_test_actions(test2, [store(r1)]).
